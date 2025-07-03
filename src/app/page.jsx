@@ -7,7 +7,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
   BarChart,
   Bar,
@@ -20,39 +19,56 @@ import {
   DollarSign,
   BarChart3,
   Activity,
+  Zap,
+  Eye,
+  RefreshCw,
 } from "lucide-react";
 
 const ExpenseDashboard = () => {
   const [chartType, setChartType] = useState("line");
   const [animationKey, setAnimationKey] = useState(0);
   const [expenseData, setExpenseData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [hoveredCard, setHoveredCard] = useState(null);
 
-  // const expenseData = [
-  //   { day: "จันทร์", amount: 1250, DAY: "Mon", category: "อาหาร" },
-  //   { day: "อังคาร", amount: 890, DAY: "Tue", category: "เดินทาง" },
-  //   { day: "พุธ", amount: 2100, DAY: "Wed", category: "ช้อปปิ้ง" },
-  //   { day: "พฤหัสบดี", amount: 756, DAY: "Thu", category: "อาหาร" },
-  //   { day: "ศุกร์", amount: 1850, DAY: "Fri", category: "บันเทิง" },
-  //   { day: "เสาร์", amount: 3200, DAY: "Sat", category: "ช้อปปิ้ง" },
-  //   { day: "อาทิตย์", amount: 980, DAY: "Sun", category: "อาหาร" },
-  // ];
+  // Mock data for demo purposes
+  const mockData = [
+    { DAY: "จันทร์", TOTAL_PRICE: 850 },
+    { DAY: "อังคาร", TOTAL_PRICE: 1200 },
+    { DAY: "พุธ", TOTAL_PRICE: 950 },
+    { DAY: "พฤหัสบดี", TOTAL_PRICE: 1400 },
+    { DAY: "ศุกร์", TOTAL_PRICE: 1100 },
+    { DAY: "เสาร์", TOTAL_PRICE: 1800 },
+    { DAY: "อาทิตย์", TOTAL_PRICE: 1350 },
+  ];
 
-  useEffect(()=>{
-    fetch("https://expenses-api-o3fr.onrender.com/")
-      .then((res) => res.json())
-      .then((data) => setExpenseData(data));
-  },[])
+  useEffect(() => {
+    // Simulate API call
+    const timer = setTimeout(async() => {
+      await fetch("https://expenses-api-o3fr.onrender.com/")
+        .then((res) => res.json())
+        .then((data) => {
+          setExpenseData(data);
+          setLoading(false);
+        });
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const totalExpense = expenseData.reduce(
     (sum, item) => sum + item.TOTAL_PRICE,
     0
   );
-  const averageExpense = Math.round(totalExpense / expenseData.length);
-  const maxExpense = Math.max(...expenseData.map((item) => item?.TOTAL_PRICE));
-  const minExpense = Math.min(...expenseData.map((item) => item?.TOTAL_PRICE));
+  const averageExpense = Math.round(totalExpense / expenseData.length) || 0;
+  const maxExpense =
+    Math.max(...expenseData.map((item) => item?.TOTAL_PRICE)) || 0;
+  const minExpense =
+    Math.min(...expenseData.map((item) => item?.TOTAL_PRICE)) || 0;
 
   const trend =
-    expenseData[expenseData.length - 1]?.TOTAL_PRICE > expenseData[0]?.TOTAL_PRICE
+    expenseData[expenseData.length - 1]?.TOTAL_PRICE >
+    expenseData[0]?.TOTAL_PRICE
       ? "up"
       : "down";
   const trendPercentage = Math.abs(
@@ -65,10 +81,10 @@ const ExpenseDashboard = () => {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white p-4 border border-gray-200 rounded-lg shadow-lg">
-          <p className="font-semibold text-gray-800">{`${label}`}</p>
-          <p className="text-blue-600">
-            {`ใช้จ่าย: ${payload[0].value} บาท`}
+        <div className="bg-gray-900/90 backdrop-blur-md p-4 border border-cyan-500/30 rounded-2xl shadow-2xl">
+          <p className="font-semibold text-white text-sm mb-1">{`${label}`}</p>
+          <p className="text-cyan-400 font-medium">
+            {`฿${payload[0].value?.toLocaleString()}`}
           </p>
         </div>
       );
@@ -94,11 +110,26 @@ const ExpenseDashboard = () => {
         return (
           <ResponsiveContainer key={animationKey} {...commonProps}>
             <BarChart data={expenseData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="DAY" tick={{ fontSize: 12 }} />
-              <YAxis tick={{ fontSize: 12 }} />
+              <defs>
+                <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#00d4ff" />
+                  <stop offset="100%" stopColor="#0099cc" />
+                </linearGradient>
+              </defs>
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="#374151"
+                opacity={0.3}
+              />
+              <XAxis dataKey="DAY" tick={{ fontSize: 12, fill: "#9ca3af" }} />
+              <YAxis tick={{ fontSize: 12, fill: "#9ca3af" }} />
               <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="amount" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+              <Bar
+                dataKey="TOTAL_PRICE"
+                fill="url(#barGradient)"
+                radius={[8, 8, 0, 0]}
+                className="drop-shadow-lg"
+              />
             </BarChart>
           </ResponsiveContainer>
         );
@@ -106,16 +137,27 @@ const ExpenseDashboard = () => {
         return (
           <ResponsiveContainer key={animationKey} {...commonProps}>
             <AreaChart data={expenseData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="DAY" tick={{ fontSize: 12 }} />
-              <YAxis tick={{ fontSize: 12 }} />
+              <defs>
+                <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#00d4ff" stopOpacity={0.8} />
+                  <stop offset="100%" stopColor="#0099cc" stopOpacity={0.1} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="#374151"
+                opacity={0.3}
+              />
+              <XAxis dataKey="DAY" tick={{ fontSize: 12, fill: "#9ca3af" }} />
+              <YAxis tick={{ fontSize: 12, fill: "#9ca3af" }} />
               <Tooltip content={<CustomTooltip />} />
               <Area
                 type="monotone"
                 dataKey="TOTAL_PRICE"
-                stroke="#3b82f6"
-                fill="#3b82f6"
-                fillOpacity={0.6}
+                stroke="#00d4ff"
+                strokeWidth={3}
+                fill="url(#areaGradient)"
+                className="drop-shadow-lg"
               />
             </AreaChart>
           </ResponsiveContainer>
@@ -124,17 +166,37 @@ const ExpenseDashboard = () => {
         return (
           <ResponsiveContainer key={animationKey} {...commonProps}>
             <LineChart data={expenseData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="DAY" tick={{ fontSize: 12 }} />
-              <YAxis tick={{ fontSize: 12 }} />
+              <defs>
+                <linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#00d4ff" />
+                  <stop offset="100%" stopColor="#0099cc" />
+                </linearGradient>
+              </defs>
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="#374151"
+                opacity={0.3}
+              />
+              <XAxis dataKey="DAY" tick={{ fontSize: 12, fill: "#9ca3af" }} />
+              <YAxis tick={{ fontSize: 12, fill: "#9ca3af" }} />
               <Tooltip content={<CustomTooltip />} />
               <Line
                 type="monotone"
                 dataKey="TOTAL_PRICE"
-                stroke="#3b82f6"
-                strokeWidth={3}
-                dot={{ fill: "#3b82f6", strokeWidth: 2, r: 6 }}
-                activeDot={{ r: 8, stroke: "#3b82f6", strokeWidth: 2 }}
+                stroke="url(#lineGradient)"
+                strokeWidth={4}
+                dot={{
+                  fill: "#00d4ff",
+                  strokeWidth: 2,
+                  r: 6,
+                  className: "drop-shadow-lg",
+                }}
+                activeDot={{
+                  r: 10,
+                  stroke: "#00d4ff",
+                  strokeWidth: 3,
+                  className: "drop-shadow-lg",
+                }}
               />
             </LineChart>
           </ResponsiveContainer>
@@ -142,135 +204,176 @@ const ExpenseDashboard = () => {
     }
   };
 
+  const StatCard = ({ title, value, icon: Icon, color, trend: cardTrend }) => (
+    <div
+      className={`relative group cursor-pointer transition-all duration-500 hover:scale-105 ${
+        hoveredCard === title ? "z-10" : ""
+      }`}
+      onMouseEnter={() => setHoveredCard(title)}
+      onMouseLeave={() => setHoveredCard(null)}
+    >
+      <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500" />
+      <div className="relative bg-gray-900/60 backdrop-blur-md border border-gray-700/50 rounded-2xl p-6 shadow-2xl">
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <p className="text-sm font-medium text-gray-300">{title}</p>
+            <p className="text-2xl font-bold text-white tracking-tight">
+              {loading ? (
+                <div className="h-8 w-20 bg-gray-700/50 rounded-lg animate-pulse" />
+              ) : (
+                `฿${value?.toLocaleString()}`
+              )}
+            </p>
+            {cardTrend && (
+              <p className="text-xs text-gray-400 flex items-center">
+                {cardTrend === "up" ? (
+                  <TrendingUp className="w-3 h-3 text-red-400 mr-1" />
+                ) : (
+                  <TrendingDown className="w-3 h-3 text-green-400 mr-1" />
+                )}
+                {trendPercentage}%
+              </p>
+            )}
+          </div>
+          <div
+            className={`${color} p-4 rounded-xl backdrop-blur-sm group-hover:scale-110 transition-transform duration-300`}
+          >
+            <Icon className="w-6 h-6 text-white drop-shadow-lg" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-cyan-500/30 rounded-full animate-spin border-t-cyan-500" />
+            <Zap className="w-8 h-8 text-cyan-500 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+          </div>
+          <p className="text-white text-lg font-medium">กำลังโหลดข้อมูล...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-4 sm:p-6 lg:p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
-            📊 Dashboard การใช้จ่าย
-          </h1>
-          <p className="text-gray-600 text-lg">
-            สรุปการใช้จ่ายรายวันในสัปดาห์นี้
-          </p>
-        </div>
+    <div className="min-h-screen bg-gray-900 text-white relative overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-cyan-500/30 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute top-1/3 right-0 w-80 h-80 bg-blue-500/30 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-purple-500/30 rounded-full blur-3xl animate-pulse delay-2000" />
+      </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">รวมทั้งหมด</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  ฿{totalExpense}
-                </p>
+      <div className="relative z-10 p-4 sm:p-6 lg:p-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="mb-8 text-center">
+            <div className="inline-flex items-center space-x-2 mb-4">
+              <div className="w-2 h-2 bg-cyan-500 rounded-full animate-pulse" />
+              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse delay-100" />
+              <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse delay-200" />
+            </div>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent mb-4">
+              EXPENSE DASHBOARD
+            </h1>
+            <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+              ระบบวิเคราะห์การใช้จ่ายอัจฉริยะ - เชื่อมต่อข้อมูลแบบเรียลไทม์
+            </p>
+          </div>
+
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+            <StatCard
+              title="รวมทั้งหมด"
+              value={totalExpense}
+              icon={DollarSign}
+              color="bg-gradient-to-r from-cyan-500 to-blue-600"
+            />
+            <StatCard
+              title="เฉลี่ย/วัน"
+              value={averageExpense}
+              icon={Activity}
+              color="bg-gradient-to-r from-green-500 to-teal-600"
+            />
+            <StatCard
+              title="สูงสุด"
+              value={maxExpense}
+              icon={TrendingUp}
+              color="bg-gradient-to-r from-red-500 to-pink-600"
+            />
+            <StatCard
+              title="แนวโน้ม"
+              value={parseFloat(trendPercentage)}
+              icon={BarChart3}
+              color={
+                trend === "up"
+                  ? "bg-gradient-to-r from-red-500 to-pink-600"
+                  : "bg-gradient-to-r from-green-500 to-teal-600"
+              }
+              trend={trend}
+            />
+          </div>
+
+          {/* Chart Section */}
+          <div className="relative group">
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500" />
+            <div className="relative bg-gray-900/60 backdrop-blur-md border border-gray-700/50 rounded-3xl p-6 shadow-2xl">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
+                <div className="flex items-center space-x-3 mb-4 lg:mb-0">
+                  <Eye className="w-6 h-6 text-cyan-400" />
+                  <h2 className="text-2xl font-bold text-white">
+                    วิเคราะห์การใช้จ่าย
+                  </h2>
+                </div>
+
+                <div className="flex bg-gray-800/50 backdrop-blur-sm rounded-2xl p-1 border border-gray-700/50">
+                  {[
+                    { type: "line", label: "เส้น", icon: "📈" },
+                    { type: "bar", label: "แท่ง", icon: "📊" },
+                    { type: "area", label: "พื้นที่", icon: "🏔️" },
+                  ].map(({ type, label, icon }) => (
+                    <button
+                      key={type}
+                      onClick={() => handleChartTypeChange(type)}
+                      className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
+                        chartType === type
+                          ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg transform scale-105"
+                          : "text-gray-300 hover:text-white hover:bg-gray-700/50"
+                      }`}
+                    >
+                      <span>{icon}</span>
+                      <span>{label}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div className="bg-blue-100 p-3 rounded-lg">
-                <DollarSign className="w-6 h-6 text-blue-600" />
+
+              <div className="w-full h-96 sm:h-[400px] bg-gray-800/30 rounded-2xl p-4 backdrop-blur-sm border border-gray-700/30">
+                {renderChart()}
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">เฉลี่ย/วัน</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  ฿{averageExpense}
-                </p>
-              </div>
-              <div className="bg-green-100 p-3 rounded-lg">
-                <Activity className="w-6 h-6 text-green-600" />
-              </div>
+          {/* Footer */}
+          <div className="mt-8 text-center">
+            <div className="inline-flex items-center space-x-2 text-gray-400">
+              <RefreshCw className="w-4 h-4" />
+              <p className="text-sm">
+                อัปเดตล่าสุด:{" "}
+                {new Date().toLocaleDateString("th-TH", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </p>
             </div>
           </div>
-
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">สูงสุด</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  ฿{maxExpense}
-                </p>
-              </div>
-              <div className="bg-red-100 p-3 rounded-lg">
-                <TrendingUp className="w-6 h-6 text-red-600" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">แนวโน้ม</p>
-                <p className="text-2xl font-bold text-gray-900 flex items-center">
-                  {trend === "up" ? (
-                    <TrendingUp className="w-5 h-5 text-red-500 mr-1" />
-                  ) : (
-                    <TrendingDown className="w-5 h-5 text-green-500 mr-1" />
-                  )}
-                  {trendPercentage}%
-                </p>
-              </div>
-              <div
-                className={`${
-                  trend === "up" ? "bg-red-100" : "bg-green-100"
-                } p-3 rounded-lg`}
-              >
-                <BarChart3
-                  className={`w-6 h-6 ${
-                    trend === "up" ? "text-red-600" : "text-green-600"
-                  }`}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4 sm:mb-0">
-              กราฟการใช้จ่ายรายวัน
-            </h2>
-
-            <div className="flex bg-gray-100 rounded-lg p-1">
-              <button
-                onClick={() => handleChartTypeChange("line")}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                  chartType === "line"
-                    ? "bg-white text-blue-600 shadow-sm"
-                    : "text-gray-600 hover:text-gray-900"
-                }`}
-              >
-                เส้น
-              </button>
-              <button
-                onClick={() => handleChartTypeChange("bar")}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                  chartType === "bar"
-                    ? "bg-white text-blue-600 shadow-sm"
-                    : "text-gray-600 hover:text-gray-900"
-                }`}
-              >
-                แท่ง
-              </button>
-              <button
-                onClick={() => handleChartTypeChange("area")}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                  chartType === "area"
-                    ? "bg-white text-blue-600 shadow-sm"
-                    : "text-gray-600 hover:text-gray-900"
-                }`}
-              >
-                พื้นที่
-              </button>
-            </div>
-          </div>
-
-          <div className="w-full h-96 sm:h-[400px]">{renderChart()}</div>
-        </div>
-
-
-        <div className="mt-8 text-center text-gray-500 text-sm">
-          <p>อัปเดตล่าสุด: {new Date().toLocaleDateString("th-TH")}</p>
         </div>
       </div>
     </div>
