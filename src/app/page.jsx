@@ -1,28 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  Area,
-  AreaChart,
-} from "recharts";
-import {
-  TrendingUp,
-  TrendingDown,
-  DollarSign,
-  BarChart3,
-  Activity,
-  Zap,
-  Eye,
-  RefreshCw,
-} from "lucide-react";
+import io from "socket.io-client"; // ✅ นำเข้า
+
+// ... ส่วน import เดิมของคุณ ...
 
 const ExpenseDashboard = () => {
   const [chartType, setChartType] = useState("line");
@@ -31,30 +11,36 @@ const ExpenseDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [hoveredCard, setHoveredCard] = useState(null);
 
-  // Mock data for demo purposes
-  const mockData = [
-    { DAY: "จันทร์", TOTAL_PRICE: 850 },
-    { DAY: "อังคาร", TOTAL_PRICE: 1200 },
-    { DAY: "พุธ", TOTAL_PRICE: 950 },
-    { DAY: "พฤหัสบดี", TOTAL_PRICE: 1400 },
-    { DAY: "ศุกร์", TOTAL_PRICE: 1100 },
-    { DAY: "เสาร์", TOTAL_PRICE: 1800 },
-    { DAY: "อาทิตย์", TOTAL_PRICE: 1350 },
-  ];
-
   useEffect(() => {
-    // Simulate API call
-    const timer = setTimeout(async() => {
-      await fetch("https://expenses-api-o3fr.onrender.com/")
+    // เรียก API ปกติ
+    fetch("https://expenses-api-o3fr.onrender.com/")
+      .then((res) => res.json())
+      .then((data) => {
+        setExpenseData(data);
+        setLoading(false);
+      });
+
+    // ✅ เชื่อม Socket.IO
+    const socket = io("https://expenses-api-o3fr.onrender.com");
+
+    // ฟัง event เมื่อมี expense ใหม่
+    socket.on("newExpenseAdded", (newExpense) => {
+      console.log("Received new expense:", newExpense);
+
+      // ดึงข้อมูลใหม่ หรือจะ push ก็ได้ถ้าโครงสร้างเหมาะสม
+      fetch("https://expenses-api-o3fr.onrender.com/")
         .then((res) => res.json())
         .then((data) => {
           setExpenseData(data);
-          setLoading(false);
         });
-    }, 1500);
+    });
 
-    return () => clearTimeout(timer);
+    return () => {
+      socket.disconnect();
+    };
   }, []);
+
+  // ... โค้ดส่วนที่เหลือคงเดิม ...
 
   const totalExpense = expenseData.reduce(
     (sum, item) => sum + item.TOTAL_PRICE,
