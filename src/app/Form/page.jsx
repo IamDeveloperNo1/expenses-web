@@ -95,7 +95,13 @@ export default function FoodExpenseForm() {
                 value={formData.Name}
                 onChange={handleChange}
                 placeholder="ข้าวมันไก่"
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent focus:bg-white/20 transition-all duration-300 backdrop-blur-sm"
+                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent focus:bg-white/20 transition-all duration-300 backdrop-blur-sm appearance-none"
+                style={{
+                  WebkitAppearance: "none",
+                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  color: "white",
+                  borderRadius: "16px",
+                }}
                 required
               />
             </div>
@@ -110,7 +116,13 @@ export default function FoodExpenseForm() {
                 name="Category_id"
                 value={formData.Category_id}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent focus:bg-white/20 transition-all duration-300 backdrop-blur-sm"
+                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent focus:bg-white/20 transition-all duration-300 backdrop-blur-sm appearance-none"
+                style={{
+                  WebkitAppearance: "none",
+                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  color: "white",
+                  borderRadius: "16px",
+                }}
               >
                 <option value={1} className="bg-gray-800 text-white">
                   อาหารหลัก
@@ -137,7 +149,13 @@ export default function FoodExpenseForm() {
                 onChange={handleChange}
                 placeholder="40.00"
                 step="0.01"
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent focus:bg-white/20 transition-all duration-300 backdrop-blur-sm"
+                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent focus:bg-white/20 transition-all duration-300 backdrop-blur-sm appearance-none"
+                style={{
+                  WebkitAppearance: "none",
+                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  color: "white",
+                  borderRadius: "16px",
+                }}
                 required
               />
             </div>
@@ -154,7 +172,13 @@ export default function FoodExpenseForm() {
                 onChange={handleChange}
                 placeholder="ข้าง 7-11"
                 rows="3"
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent focus:bg-white/20 transition-all duration-300 backdrop-blur-sm resize-none"
+                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent focus:bg-white/20 transition-all duration-300 backdrop-blur-sm resize-none appearance-none"
+                style={{
+                  WebkitAppearance: "none",
+                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  color: "white",
+                  borderRadius: "16px",
+                }}
               />
             </div>
           </div>
