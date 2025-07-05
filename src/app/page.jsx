@@ -1,8 +1,29 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import io from "socket.io-client"; // ✅ นำเข้า
-
-// ... ส่วน import เดิมของคุณ ...
+import io from "socket.io-client";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  Area,
+  AreaChart,
+} from "recharts";
+import {
+  TrendingUp,
+  TrendingDown,
+  DollarSign,
+  BarChart3,
+  Activity,
+  Zap,
+  Eye,
+  RefreshCw,
+} from "lucide-react";
 
 const ExpenseDashboard = () => {
   const [chartType, setChartType] = useState("line");
@@ -39,8 +60,6 @@ const ExpenseDashboard = () => {
       socket.disconnect();
     };
   }, []);
-
-  // ... โค้ดส่วนที่เหลือคงเดิม ...
 
   const totalExpense = expenseData.reduce(
     (sum, item) => sum + item.TOTAL_PRICE,
