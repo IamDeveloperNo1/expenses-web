@@ -95,14 +95,8 @@ export default function FoodExpenseForm() {
                 name="Name"
                 value={formData.Name}
                 onChange={handleChange}
-                placeholder="ข้าวมันไก่"
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent focus:bg-white/20 transition-all duration-300 backdrop-blur-sm appearance-none"
-                style={{
-                  WebkitAppearance: "none",
-                  backgroundColor: "rgba(255, 255, 255, 0.1)",
-                  color: "white",
-                  borderRadius: "16px",
-                }}
+                placeholder="สิ่งที่กิน"
+                className="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-2xl text-black placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
                 required
               />
             </div>
@@ -117,29 +111,32 @@ export default function FoodExpenseForm() {
                 name="Category_id"
                 value={formData.Category_id}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent focus:bg-white/20 transition-all duration-300 backdrop-blur-sm appearance-none"
-                style={{
-                  WebkitAppearance: "none",
-                  backgroundColor: "rgba(255, 255, 255, 0.1)",
-                  color: "white",
-                  borderRadius: "16px",
-                }}
+                className="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-2xl text-black focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
               >
-                <option value={1} className="bg-gray-800 text-white">
-                  อาหารหลัก
+                <option value={1} className="bg-gray-800 text-black">
+                  ข้าว
                 </option>
-                <option value={2} className="bg-gray-800 text-white">
-                  ขนม
-                </option>
-                <option value={3} className="bg-gray-800 text-white">
+                <option value={2} className="bg-gray-800 text-black">
                   เครื่องดื่ม
+                </option>
+                <option value={3} className="bg-gray-800 text-black">
+                  เสื้อผ้า
+                </option>
+                <option value={4} className="bg-gray-800 text-black">
+                  รถ
+                </option>
+                <option value={30001.0} className="bg-gray-800 text-black">
+                  ห้อง
+                </option>
+                <option value={5} className="bg-gray-800 text-black">
+                  อื่นๆ
                 </option>
               </select>
             </div>
 
             {/* Price Field */}
             <div className="relative mb-6">
-              <label className="block text-white text-sm font-medium mb-2 flex items-center gap-2">
+              <label className="block text-black text-sm font-medium mb-2 flex items-center gap-2">
                 <DollarSign className="w-4 h-4" />
                 ราคา (บาท)
               </label>
@@ -148,15 +145,9 @@ export default function FoodExpenseForm() {
                 name="Price"
                 value={formData.Price}
                 onChange={handleChange}
-                placeholder="40.00"
+                placeholder="00.00"
                 step="0.01"
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent focus:bg-white/20 transition-all duration-300 backdrop-blur-sm appearance-none"
-                style={{
-                  WebkitAppearance: "none",
-                  backgroundColor: "rgba(255, 255, 255, 0.1)",
-                  color: "white",
-                  borderRadius: "16px",
-                }}
+                className="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-2xl text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
                 required
               />
             </div>
@@ -171,15 +162,9 @@ export default function FoodExpenseForm() {
                 name="Desc"
                 value={formData.Desc}
                 onChange={handleChange}
-                placeholder="ข้าง 7-11"
+                placeholder="ที่ไหน... วันที่... เวลา... อื่นๆ..."
                 rows="3"
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent focus:bg-white/20 transition-all duration-300 backdrop-blur-sm resize-none appearance-none"
-                style={{
-                  WebkitAppearance: "none",
-                  backgroundColor: "rgba(255, 255, 255, 0.1)",
-                  color: "white",
-                  borderRadius: "16px",
-                }}
+                className="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-2xl text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300 backdrop-blur-sm resize-none"
               />
             </div>
           </div>
