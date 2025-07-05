@@ -34,7 +34,7 @@ const ExpenseDashboard = () => {
 
   useEffect(() => {
     // เรียก API ปกติ
-    fetch("https://expenses-api-o3fr.onrender.com/")
+    fetch("https://expenses-api-o3fr.onrender.com")
       .then((res) => res.json())
       .then((data) => {
         setExpenseData(data);
