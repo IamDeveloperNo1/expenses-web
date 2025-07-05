@@ -136,7 +136,7 @@ export default function FoodExpenseForm() {
 
             {/* Price Field */}
             <div className="relative mb-6">
-              <label className="block text-black text-sm font-medium mb-2 flex items-center gap-2">
+              <label className="block text-white text-sm font-medium mb-2 flex items-center gap-2">
                 <DollarSign className="w-4 h-4" />
                 ราคา (บาท)
               </label>
