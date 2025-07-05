@@ -1,4 +1,3 @@
-'use client'
 import React, { useState } from "react";
 import {
   Send,
@@ -95,8 +94,8 @@ export default function FoodExpenseForm() {
                 name="Name"
                 value={formData.Name}
                 onChange={handleChange}
-                placeholder="สิ่งที่กิน"
-                className="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-2xl text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
+                placeholder="ข้าวมันไก่"
+                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent focus:bg-white/20 transition-all duration-300 backdrop-blur-sm"
                 required
               />
             </div>
@@ -111,25 +110,16 @@ export default function FoodExpenseForm() {
                 name="Category_id"
                 value={formData.Category_id}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
+                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent focus:bg-white/20 transition-all duration-300 backdrop-blur-sm"
               >
                 <option value={1} className="bg-gray-800 text-white">
-                  ข้าว
+                  อาหารหลัก
                 </option>
                 <option value={2} className="bg-gray-800 text-white">
-                  เครื่องดื่ม
+                  ขนม
                 </option>
                 <option value={3} className="bg-gray-800 text-white">
-                  เสื้อผ้า
-                </option>
-                <option value={4} className="bg-gray-800 text-white">
-                  รถ
-                </option>
-                <option value={30001.0} className="bg-gray-800 text-white">
-                  ห้อง
-                </option>
-                <option value={5} className="bg-gray-800 text-white">
-                  อื่นๆ
+                  เครื่องดื่ม
                 </option>
               </select>
             </div>
@@ -145,9 +135,9 @@ export default function FoodExpenseForm() {
                 name="Price"
                 value={formData.Price}
                 onChange={handleChange}
-                placeholder="00.00"
+                placeholder="40.00"
                 step="0.01"
-                className="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-2xl text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
+                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent focus:bg-white/20 transition-all duration-300 backdrop-blur-sm"
                 required
               />
             </div>
@@ -162,9 +152,9 @@ export default function FoodExpenseForm() {
                 name="Desc"
                 value={formData.Desc}
                 onChange={handleChange}
-                placeholder="ที่ไหน... วันที่... เวลา... อื่นๆ..."
+                placeholder="ข้าง 7-11"
                 rows="3"
-                className="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-2xl text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300 backdrop-blur-sm resize-none"
+                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent focus:bg-white/20 transition-all duration-300 backdrop-blur-sm resize-none"
               />
             </div>
           </div>
